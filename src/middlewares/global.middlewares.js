@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const user = require('../services/user.service')
+const dados = require('../services/user.service')
 
 const validId = (req,res,next)=>{
     const id = req.params.id
@@ -8,11 +8,21 @@ const validId = (req,res,next)=>{
         return res.status(400).send({message:'Id invalido'})
     }
 
+    req.id = id
     next()
 }
 
-const validUser = (req,res,next)=>{
+const validUser = async (req,res,next)=>{
     const id = req.params.id
+
+    const user = await dados.findUsersByIdService(id)
+
+    if(!user){
+        return res.status(400).send({message: 'O user não encontrado'})
+    }
+
+    req.user= user
+    next()
 
 }
 

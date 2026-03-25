@@ -1,94 +1,76 @@
-const mongoose = require('mongoose')
 const dados = require('../services/user.service')
 
 const cadastro = async(req,res)=>{
-    const {nome,email,telefone,senha}=req.body
+    try{
+        const {nome,email,telefone,senha}=req.body
 
-    if(!nome||!email||!telefone||!senha){
-        res.status(400).send({message: "Preencha todos os campos"})
+        if(!nome||!email||!telefone||!senha){
+            res.status(400).send({message: "Preencha todos os campos"})
+        }
+
+        const user = await dados.userCadastroService(req.body)
+
+        if(user.email === email ){
+            return res.status(400).send({messaeg: 'E-mail já cadastrado'})
+        }
+
+        if(!user){
+        return res.status(400).send({message: 'Erro ao cadastrar'})
+        }
+        
+        res.status(200).send({message:"Cadastrao com sucesso"})    
     }
-
-    const user = await dados.userCadastroService(req.body)
-
-    if(user.email === email ){
-        return res.status(400).send({messaeg: 'E-mail já cadastrado'})
+    catch(err){
+        res.status(500).send({message: err.message})
     }
-
-    if(!user){
-       return res.status(400).send({message: 'Erro ao cadastrar'})
-    }
-    
-    res.status(200).send({message:"Cadastrao com sucesso"})    
-
 }
 
-
 const findAll = async (req,res)=>{
+    try{
     const users = await dados.findAllUsersService()
 
     if (users.length === 0){
         return res.status(400).send({message: 'Não há users cadastrado'})
     }
     res.json(users)
-
+    }catch(err){
+        res.status(500).send({message: err.message})
+    }
 }
 
 const findUserById = async (req,res) => {
-    const id = req.params.id
-    /*
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(400).send({message: 'Id invalido'})
-    }
-        
-    */
-    const user = await dados.findUsersByIdService(id)
-
-   
-
-    if(!user){
-        return res.status(400).send({message: 'Usuario não encontrado'})
-    }
-
-    res.status(200).json(user)
+   try{ 
+    res.status(200).json(req.user)
+   }catch(err){
+    res.status(500).send({message: err.message})
+   }
 }
 
 const update = async(req,res)=>{
-    const id = req.params.id
-    if(!mongoose.Types.ObjectId.isValid(id)){
-       return res.status(400).send({message: 'Id não valido'})
-    }
-    
-    const {nome,email,telefone,senha} = req.body
+    try{
+        const {nome,email,telefone,senha} = req.body
 
-    if(!nome && !email && !telefone && !senha){
-        res.status(400).send({message: "Preencha todos os campos"})
-    }
-    
-    const user = await dados.findUsersByIdService(id)
-    if (!user){
-        return res.status(400).send({message: 'O user não encontrado'})
-    }
+        if(!nome && !email && !telefone && !senha){
+            res.status(400).send({message: "Preencha todos os campos"})
+        }
+        
+        await dados.updateUserService(req.id,nome,email,telefone,senha)
 
-    await dados.updateUserService(id,nome,email,telefone,senha)
-
-    res.send({message: 'User atualizado com sucesso'})
+        res.send({message: 'User atualizado com sucesso'})
+    }catch(err){
+        res.status(500).send({message: err.message})
+    }
 }
 
 const deleteUser = async (req,res)=>{
-    const id = req.params.id
+    try{
+        await dados.deleteUserService(req.id)
 
-    if (!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(400).send({message: 'O id não é valido'})
-    }
-
-    const user = await dados.findUsersByIdService(id)
-    if(!user){
-        return res.status.send({message: 'User não encontrado'})
-    }
-
-    await dados.deleteUserService(id)
-
-    res.status(200).send({message: 'User elimido com sucesso'})
+        res.status(200).send({message: 'User elimido com sucesso'})
+      }
+      catch(err){
+        res.status(500).send({message: err.message})
+      }    
 }
 
 module.exports = {

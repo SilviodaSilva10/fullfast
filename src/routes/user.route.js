@@ -6,8 +6,8 @@ const {validId,validUser} = require('../middlewares/global.middlewares')
 
 router.post('/', userController.cadastro)
 router.get('/',userController.findAll)
-router.get('/:id', validId, userController.findUserById)
-router.patch('/:id', validId, userController.update)
-router.delete('/:id', validId, userController.deleteUser)
+router.get('/:id', validId,validUser, userController.findUserById)
+router.patch('/:id', validId,validUser, userController.update)
+router.delete('/:id', validId,validUser, userController.deleteUser)
 
 module.exports = router 
