@@ -1,18 +1,14 @@
-const dados = require('../services/user.service')
-
+import dados from '../services/user.service.js'
+import bcrypt from 'bcrypt'
 const cadastro = async(req,res)=>{
     try{
-        const {nome,email,telefone,senha}=req.body
+        const {nome,username,email,password,avatar,background}=req.body
+        
 
-        if(!nome||!email||!telefone||!senha){
+        if(!nome || !username || !email || !password || !avatar || !background){
             res.status(400).send({message: "Preencha todos os campos"})
         }
-
         const user = await dados.userCadastroService(req.body)
-
-        if(user.email === email ){
-            return res.status(400).send({messaeg: 'E-mail já cadastrado'})
-        }
 
         if(!user){
         return res.status(400).send({message: 'Erro ao cadastrar'})
@@ -48,13 +44,13 @@ const findUserById = async (req,res) => {
 
 const update = async(req,res)=>{
     try{
-        const {nome,email,telefone,senha} = req.body
+        const {nome,username,email,senha,avatar,background} = req.body
 
-        if(!nome && !email && !telefone && !senha){
+        if(!nome &&  !username && !email && !senha && !avatar && !background){
             res.status(400).send({message: "Preencha todos os campos"})
         }
         
-        await dados.updateUserService(req.id,nome,email,telefone,senha)
+        await dados.updateUserService(req.id,nome,username,email,senha,avatar,background)
 
         res.send({message: 'User atualizado com sucesso'})
     }catch(err){
@@ -73,6 +69,6 @@ const deleteUser = async (req,res)=>{
       }    
 }
 
-module.exports = {
+export  default {
     cadastro, findAll,findUserById, update,deleteUser
 }

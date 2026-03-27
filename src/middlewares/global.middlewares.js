@@ -1,7 +1,8 @@
-const mongoose = require('mongoose')
-const dados = require('../services/user.service')
+import mongoose from 'mongoose' 
+import dados from '../services/user.service.js'
 
-const validId = (req,res,next)=>{
+export const validId = (req,res,next)=>{
+   try{ 
     const id = req.params.id
 
     if(!mongoose.isValidObjectId(id)){
@@ -10,20 +11,27 @@ const validId = (req,res,next)=>{
 
     req.id = id
     next()
+    }
+    catch(err){
+        res.status(500).send({message: err.message})
+    }
 }
 
-const validUser = async (req,res,next)=>{
-    const id = req.params.id
+export  const validUser = async (req,res,next)=>{
+    try{
+        const id = req.params.id
 
-    const user = await dados.findUsersByIdService(id)
+        const user = await dados.findUsersByIdService(id)
 
-    if(!user){
-        return res.status(400).send({message: 'O user não encontrado'})
+        if(!user){
+            return res.status(400).send({message: 'O user não encontrado'})
+        }
+
+        req.user= user
+        next()  }
+    catch(err){
+        res.status(500).send({message: err.message})
     }
 
-    req.user= user
-    next()
-
 }
 
-module.exports={validId,validUser}

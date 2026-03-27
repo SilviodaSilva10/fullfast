@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
 const app = express()
 
-const userRote = require('./src/routes/user.route')
+import userRote from './src/routes/user.route.js'
 
-const connectDB = require('./src/dbs/db')
+import connectDB from './src/dbs/db.js'
 connectDB()
 
 app.use(express.json())

@@ -1,25 +1,42 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
 const UserChema  = new mongoose.Schema({
     nome:{
         type:String,
-        required:true
+        required:true,
+    },
+    username:{
+        type:String,
+        required: true
     },
     email:{
         type:String,
-        require:true,
-        unique:true
+        required:true,
+        unique:true,
+        lowercase: true
     },
-    telefone:{
+    password:{
         type:String,
-        require:true
+        required:true,
+        select: false
     },
-    senha:{
-        type:String,
-        require:true
+    avatar: {
+        type: String,
+        required:true,
+    },
+    background: {
+        type: String,
+        required: true
     }
+})
+
+
+UserChema.pre("save", async function () {
+    this.password = await bcrypt.hash(this.password,10)
+    
 })
 
 const user = mongoose.model('user', UserChema)
 
-module.exports= user
+export default user
