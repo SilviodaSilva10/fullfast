@@ -2,6 +2,7 @@ import express from 'express'
 const app = express()
 
 import userRote from './src/routes/user.route.js'
+import loginRote from './src/routes/auth.route.js'
 
 import connectDB from './src/dbs/db.js'
 connectDB()
@@ -9,8 +10,10 @@ connectDB()
 app.use(express.json())
 
 app.use('/user', userRote)
+app.use('/auth', loginRote)
 
 
-app.listen(3000, ()=>{
-    console.log('Servidor rodando')
+const port = process.env.PORT || 3000
+app.listen(port, ()=>{
+    console.log(`Servidor rodando ${port}`)
 })
