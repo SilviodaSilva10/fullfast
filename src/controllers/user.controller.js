@@ -8,6 +8,12 @@ const cadastro = async(req,res)=>{
         if(!nome || !username || !email || !password || !avatar || !background){
             res.status(400).send({message: "Preencha todos os campos"})
         }
+
+        const textEmail = await dados.encontrarEmailService(email)
+
+        if(textEmail){
+            return res.status(400).send({message: 'E-mail já esta cadastrado'})
+        }
         const user = await dados.userCadastroService(req.body)
 
         if(!user){

@@ -1,5 +1,8 @@
 import express from 'express'
+import dotenv from 'dotenv'
 const app = express()
+
+dotenv.config()
 
 import userRote from './src/routes/user.route.js'
 import loginRote from './src/routes/auth.route.js'

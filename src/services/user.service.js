@@ -16,10 +16,13 @@ const updateUserService = (id,nome,username,email,senha,avatar,background) => us
 
 const deleteUserService = (id)=>user.findOneAndDelete({_id: id})
 
+const encontrarEmailService = (email)=>user.findOne({email: email})
+
 export default {
     userCadastroService, 
     findAllUsersService,
     findUsersByIdService,
     updateUserService,
-    deleteUserService
+    deleteUserService,
+    encontrarEmailService 
 }
