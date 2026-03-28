@@ -3,4 +3,6 @@ import jwt from 'jsonwebtoken'
 
 const loginService = (email)=>user.findOne({email: email}).select('password')
 
-export default {loginService}
+const geradortoken = (id)=>jwt.sign({id: id}, process.env.Secret_jwt, {expiresIn: 86400})
+
+export default {loginService,  geradortoken}

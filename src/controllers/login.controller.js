@@ -4,6 +4,7 @@ import dados from '../services/auth.service.js'
 const login = async (req,res)=>{
     try{
     const {email, password} = req.body 
+    console.log(req.body)
 
     const user= await dados.loginService(email)
 
@@ -12,12 +13,15 @@ const login = async (req,res)=>{
     }
 
     const isPasswordisvalid = await bcrypt.compare(password, user.password)
+    console.log(isPasswordisvalid)
 
     if(!isPasswordisvalid){
         return res.status(404).send({message: "E-mail ou senha invalida"})
     }
 
-    res.send({message: 'Login feito com sucesso'})
+    const token = dados.geradortoken(user._id) 
+
+    res.send({message: token })
     }catch(err){
         res.status(500).send({message: err})
     }

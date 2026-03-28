@@ -1,6 +1,19 @@
 import mongoose from 'mongoose' 
 import dados from '../services/user.service.js'
 
+/*
+export const auth = (req,res,next)=>{
+    try{
+
+    }catch(err){
+        return res.status(500).send({message: err})
+    }
+
+}
+*/
+
+
+
 export const validId = (req,res,next)=>{
    try{ 
     const id = req.params.id

@@ -6,6 +6,7 @@ dotenv.config()
 
 import userRote from './src/routes/user.route.js'
 import loginRote from './src/routes/auth.route.js'
+import newsRoute from './src/routes/news.route.js'
 
 import connectDB from './src/dbs/db.js'
 connectDB()
@@ -14,6 +15,7 @@ app.use(express.json())
 
 app.use('/user', userRote)
 app.use('/auth', loginRote)
+app.use('/news', newsRoute)
 
 
 const port = process.env.PORT || 3000
