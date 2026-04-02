@@ -9,7 +9,7 @@ export const create = async (req,res)=>{
             return res.status(400).send({message: 'Preencha todos os Campos'})
         }
  
-        const news = await dados.create({
+        const news = await dados.createNews({
             title,
             text,
             banner,
@@ -22,21 +22,112 @@ export const create = async (req,res)=>{
 
         res.status(201).send({message: 'Publicado com sucesso'})
      }catch(err){
-        return res.status(500).send({message: err})
+        return res.status(500).send({message: err.message})
      }
 }
-
+/*
 export const findAll = async (req,res)=>{
     try{
-        const news = await dados.findAll()
-
-        if(news.length === 0){
-            return res.status(400).send({message: 'não publicações disponivel no momento'})
+        const { offset, limit}=req.query
+        
+        if(!limit){
+          return  limit = 5
         }
 
-        res.send(news)
+        if(!offset){
+            return offset = 0
+        }
+        
+        const news = await dados.findAllNews(offset,limit)
+        const total =  await dados.newsCount()
+        const currentUrl = req.baseUrl
+        
+        const next = limit + offset
+
+        const nextUrl = next < total 
+        ? `${currentUrl}?limit=${limit}&offset=${next}` 
+        : null
+
+        const previous = offset - limit < 0 
+        ? null 
+        : offset - limit
+
+        const previousUrl = previous !== null ? `${currentUrl}?limit=${limit}&offset=${previous}`: null 
+
+        if(news.length === 0){
+            return res.status(400).send({message: 'não publicações disponivel no momento s925 ale'})
+        }
+
+        res.send({
+            nextUrl,
+            previousUrl,
+            limit,
+            offset,
+            total,
+
+            results: news.map(newsItem => ({
+                id: newsItem,
+                title: newsItem.title,
+                text: newsItem.text,
+                banner: newsItem.banner,
+                likes: newsItem.likes,
+                coments: newsItem.coments,
+                name: newsItem.user.nome,
+                username: newsItem.user.username,
+                userAvatar: newsItem.user.avatar
+            }))
+        })
     }   
     catch(err){
-        returnres.status(500).send({message: err})
+        return res.status(500).send({message: err.message})
     } 
+}
+*/
+
+export const findAll = async (req,res)=>{
+    try {
+        let limit = Number(req.query.limit) || 5
+        let offset = Number(req.query.offset) || 0
+        
+
+        const news = await dados.findAllNews(offset, limit) 
+        const total = await dados.newsCount()
+        const currentUrl = req.baseUrl
+
+
+        const next = offset + limit
+        const nextUrl = next < total 
+        ?`${currentUrl}?limit=${limit}&offset=${next}`
+        :null
+
+        const previous = offset - limit<0 ? null : offset-limit
+        const previousUrl = previous !== null ? `${currentUrl}?limit=${limit}&offset=${previous}`:null
+
+
+        if(news.length === 0){
+            return res.status(400).send({message: 'Não há publicaçoes de momento'})
+        }
+
+        res.send({
+            nextUrl,
+            previousUrl,
+            limit,
+            offset,
+            total,
+            results: news.map((newsItem)=>({
+                id: newsItem._id,
+                title: newsItem.title,
+                text: newsItem.text,
+                banner: newsItem.banner,
+                likes: newsItem.likes,
+                comments: newsItem.coments,
+                name: newsItem.user.nome,
+                username: newsItem.user.username,
+                userAvatar: newsItem.user.avatar
+
+            }))
+        })
+    } catch (error) {
+        return res.status(500).send({message: error.message})
+    }
 }

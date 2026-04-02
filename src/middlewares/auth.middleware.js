@@ -29,7 +29,7 @@ export const authMiddleware = (req,res,next)=>{
 
     jwt.verify(token, process.env.Secret_jwt,async(error, decoded)=>{
         if(error){
-            console(error)
+            console.log(error)
         }
         
         const user = await dados.findUsersByIdService(decoded.id)

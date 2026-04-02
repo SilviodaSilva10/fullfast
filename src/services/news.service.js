@@ -1,6 +1,7 @@
 import news from '../models/news.model.js'
 
-const create = (body)=>news.create(body)
-const findAll = ()=>news.find()
+const createNews = (body)=>news.create(body)
+const findAllNews= (offset, limit)=> news.find().sort({_id: -1}).skip(offset).limit(limit).populate('user') 
+const newsCount = ()=>news.countDocuments()
 
-export default {create,findAll}
+export default {createNews,findAllNews, newsCount}
