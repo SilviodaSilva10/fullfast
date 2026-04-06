@@ -160,3 +160,31 @@ export const topnews = async (req,res)=>{
     }
 
 }
+
+export const findbyId = async (req,res)=>{
+    try {
+        const {id} = req.params
+
+        const news = await dados.findbyIdService(id)
+
+        if(!news){
+            return res.status(400).send({message: 'Not found'})
+        }
+
+        res.send({
+         news: {
+                id: news._id,
+                title: news.title,
+                text: news.text,
+                banner: news.banner,
+                likes: news.likes,
+                comments: news.coments,
+                name: news.user.nome,
+                username: news.user.username,
+                userAvatar: news.user.avatar
+            }   
+        })
+    } catch (err) {
+        return res.status(500).send({message: err})
+    }
+} 
