@@ -131,3 +131,32 @@ export const findAll = async (req,res)=>{
         return res.status(500).send({message: error.message})
     }
 }
+
+
+export const topnews = async (req,res)=>{
+    try {
+        const news = await dados.topnewsService()
+
+        if(!news){
+            res.status(400).send({message: 'Não publicações registadas'})
+        }
+
+        res.send({
+            news: {
+                id: news._id,
+                title: news.title,
+                text: news.text,
+                banner: news.banner,
+                likes: news.likes,
+                comments: news.coments,
+                name: news.user.nome,
+                username: news.user.username,
+                userAvatar: news.user.avatar
+            }
+    })
+
+    } catch (err) {
+        return res.status(500).send({message: err})
+    }
+
+}
