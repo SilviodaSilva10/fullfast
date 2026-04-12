@@ -10,4 +10,5 @@ export const searchbytitleService = (title)=>news.find({
     }).sort({_id: -1}).populate('user')
 
 export const byUserService = (id) =>news.find({user: id}).sort({_id: -1}).populate('user')
-export const updateService= (id,titulo,text,banner)=> news.findOneAndUpdate({_id:id},{titulo,text,banner})
+export const updateService= (id,titulo,text,banner)=> news.findOneAndUpdate({_id:id},{titulo,text,banner}, {rawResult:true})
+export const deletePostService = (id)=>news.findByIdAndDelete(id)

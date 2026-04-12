@@ -269,3 +269,14 @@ export const update = async(req,res)=>{
         banner
     })
 }
+
+export const deletePost = async(req,res)=>{
+    const id = req.id
+    const deleter = await dados.deletePostService(id)
+    
+    if(!deleter){
+        return res.status(400).send({message: 'erro ao deletar'})
+    }
+    
+    res.send({message: 'deletado'})
+}

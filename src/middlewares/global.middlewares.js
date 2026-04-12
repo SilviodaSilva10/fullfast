@@ -50,26 +50,40 @@ export  const validUser = async (req,res,next)=>{
 }
 
 export const validEdit = async(req,res,next)=>{
-    const {titulo,text,banner} = req.body
-    
-    if(!titulo && !text && !banner){
-        return res.status(400).send({message: 'Preencha o um dos campos '})
-    }
+    try {
+        const {titulo,text,banner} = req.body
+        
+        if(!titulo && !text && !banner){
+            return res.status(400).send({message: 'Preencha o um dos campos '})
+        }
 
-    req.postEdit = {titulo,text,banner}
-    next()
+        req.postEdit = {titulo,text,banner}
+        next()    
+    } catch (err) {
+        return res.status(500).send({message: err})
+    }
+    
 }
 
 export const validOwner = async (req,res,next) => {
-    const {id} = req.params
+    try {
+        const {id} = req.params
 
-    const post = await news.findbyIdService(id)
+        const post = await news.findbyIdService(id)
 
-    if(String(post.user._id) != String(req.userId)){
-        return res.status(400).send({message: 'Não tem permissão'})
+        if(!post){
+            return res.status(404).send({message: 'news not found'})
+        }
+
+
+        if(String(post.user._id) != String(req.userId)){
+            return res.status(401).send({message: 'Não tem permissão'})
+        }
+
+        req.postId = id
+        next()    
+    } catch (err) {
+        return res.status(500).send({message: err})
     }
-
-
-    req.postId = id
-    next()
+    
 }
