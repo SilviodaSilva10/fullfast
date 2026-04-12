@@ -8,7 +8,7 @@ import userRote from './src/routes/user.route.js'
 import loginRote from './src/routes/auth.route.js'
 import newsRoute from './src/routes/news.route.js'
 
-import connectDB from './src/dbs/db.js'
+import connectDB from './src/data/db.js'
 connectDB()
 
 app.use(express.json())

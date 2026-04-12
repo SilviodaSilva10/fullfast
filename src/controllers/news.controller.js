@@ -1,5 +1,5 @@
-import dados from '../services/news.service.js'
-
+import mongoose from 'mongoose'
+import * as dados from '../services/news.service.js'
 
 export const create = async (req,res)=>{
     try{
@@ -163,8 +163,9 @@ export const topnews = async (req,res)=>{
 
 export const findbyId = async (req,res)=>{
     try {
-        const {id} = req.params
+        
 
+        const post = await dados.findbyIdService(id)
         const news = await dados.findbyIdService(id)
 
         if(!news){
@@ -188,3 +189,83 @@ export const findbyId = async (req,res)=>{
         return res.status(500).send({message: err})
     }
 } 
+
+export const searchbytitle = async (req,res)=>{
+    try{
+        const {title} = req.query;
+
+        const news = await dados.searchbytitleService(title)
+
+        console.log(news)
+
+        if(news.length === 0){
+            return res
+            .status(400)
+            .send({message: 'not found'})
+        }
+
+
+        return res.send({
+            results: news.map((newsItem)=>({
+                id: newsItem._id,
+                title: newsItem.title,
+                text: newsItem.text,
+                banner: newsItem.banner,
+                likes: newsItem.likes,
+                comments: newsItem.coments,
+                name: newsItem.user.nome,
+                username: newsItem.user.username,
+                userAvatar: newsItem.user.avatar
+
+            }))            
+        })
+    }catch(err){
+        return res.status(500).send({message: err})
+    }
+
+}
+
+export const byuser = async(req,res)=>{
+    try{
+        const id = req.userId
+        const news = await dados.byUserService(id)
+
+        if(!news || news.length === 0){
+            return res.status(400).send({message: 'Not found'})
+        }
+
+        res.send({
+                results: news.map((newsItem)=>({
+                    id: newsItem._id,
+                    title: newsItem.title,
+                    text: newsItem.text,
+                    banner: newsItem.banner,
+                    likes: newsItem.likes,
+                    comments: newsItem.coments,
+                    name: newsItem.user.nome,
+                    username: newsItem.user.username,
+                    userAvatar: newsItem.user.avatar
+                }))
+            })
+    }catch(err){
+        return res.status(500).send({message: err})
+    }
+}
+
+
+export const update = async(req,res)=>{
+   
+    const {titulo,text,banner} = req.postEdit 
+
+    const news = await dados.updateService(req.postId,titulo,text,banner)
+    if(!news){
+        return res.status(400).send({message: 'Erro ao editar'})
+    }
+
+    res.send({
+        message: 'Upadate sucessfull',
+        titulo,
+        text,
+        banner
+    })
+}

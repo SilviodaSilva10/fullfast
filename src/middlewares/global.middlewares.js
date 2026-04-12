@@ -1,6 +1,7 @@
 import mongoose from 'mongoose' 
 import dados from '../services/user.service.js'
-
+import * as news from '../services/news.service.js'
+import { authMiddleware } from './auth.middleware.js'
 /*
 export const auth = (req,res,next)=>{
     try{
@@ -48,3 +49,27 @@ export  const validUser = async (req,res,next)=>{
 
 }
 
+export const validEdit = async(req,res,next)=>{
+    const {titulo,text,banner} = req.body
+    
+    if(!titulo && !text && !banner){
+        return res.status(400).send({message: 'Preencha o um dos campos '})
+    }
+
+    req.postEdit = {titulo,text,banner}
+    next()
+}
+
+export const validOwner = async (req,res,next) => {
+    const {id} = req.params
+
+    const post = await news.findbyIdService(id)
+
+    if(String(post.user._id) != String(req.userId)){
+        return res.status(400).send({message: 'Não tem permissão'})
+    }
+
+
+    req.postId = id
+    next()
+}
