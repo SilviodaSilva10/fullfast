@@ -24,7 +24,7 @@ const NewsChema = new mongoose.Schema({
     },
     likes:{
         type: Array,
-        require:true
+        require:true,
     },
     coments:{
         type: Array,

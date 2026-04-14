@@ -34,7 +34,10 @@ export const validId = (req,res,next)=>{
 export  const validUser = async (req,res,next)=>{
     try{
         const id = req.params.id
-
+         
+        if(!mongoose.isValidObjectId(id)){
+            return res.status(400).send({message:'Id invalido'})
+        }
         const user = await dados.findUsersByIdService(id)
 
         if(!user){
