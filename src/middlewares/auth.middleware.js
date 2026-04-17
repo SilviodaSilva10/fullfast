@@ -27,7 +27,7 @@ export const authMiddleware = (req,res,next)=>{
         return res.send('erro de Bearer')
     }
 
-    jwt.verify(token, process.env.Secret_jwt,async(error, decoded)=>{
+    jwt.verify(token, process.env.JWT_SECRET,async(error, decoded)=>{
         if(error){
             console.log(error)
         }

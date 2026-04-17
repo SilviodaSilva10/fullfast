@@ -25,64 +25,6 @@ export const create = async (req,res)=>{
         return res.status(500).send({message: err.message})
      }
 }
-/*
-export const findAll = async (req,res)=>{
-    try{
-        const { offset, limit}=req.query
-        
-        if(!limit){
-          return  limit = 5
-        }
-
-        if(!offset){
-            return offset = 0
-        }
-        
-        const news = await dados.findAllNews(offset,limit)
-        const total =  await dados.newsCount()
-        const currentUrl = req.baseUrl
-        
-        const next = limit + offset
-
-        const nextUrl = next < total 
-        ? `${currentUrl}?limit=${limit}&offset=${next}` 
-        : null
-
-        const previous = offset - limit < 0 
-        ? null 
-        : offset - limit
-
-        const previousUrl = previous !== null ? `${currentUrl}?limit=${limit}&offset=${previous}`: null 
-
-        if(news.length === 0){
-            return res.status(400).send({message: 'não publicações disponivel no momento s925 ale'})
-        }
-
-        res.send({
-            nextUrl,
-            previousUrl,
-            limit,
-            offset,
-            total,
-
-            results: news.map(newsItem => ({
-                id: newsItem,
-                title: newsItem.title,
-                text: newsItem.text,
-                banner: newsItem.banner,
-                likes: newsItem.likes,
-                coments: newsItem.coments,
-                name: newsItem.user.nome,
-                username: newsItem.user.username,
-                userAvatar: newsItem.user.avatar
-            }))
-        })
-    }   
-    catch(err){
-        return res.status(500).send({message: err.message})
-    } 
-}
-*/
 
 export const findAll = async (req,res)=>{
     try {
@@ -132,7 +74,6 @@ export const findAll = async (req,res)=>{
     }
 }
 
-
 export const topnews = async (req,res)=>{
     try {
         const news = await dados.topnewsService()
@@ -163,9 +104,8 @@ export const topnews = async (req,res)=>{
 
 export const findbyId = async (req,res)=>{
     try {
-        
+        const id = req.id
 
-        const post = await dados.findbyIdService(id)
         const news = await dados.findbyIdService(id)
 
         if(!news){
@@ -186,7 +126,7 @@ export const findbyId = async (req,res)=>{
             }   
         })
     } catch (err) {
-        return res.status(500).send({message: err})
+        return res.status(500).send({message: err.message})
     }
 } 
 
@@ -252,7 +192,6 @@ export const byuser = async(req,res)=>{
     }
 }
 
-
 export const update = async(req,res)=>{
    
     const {titulo,text,banner} = req.postEdit 
@@ -280,3 +219,63 @@ export const deletePost = async(req,res)=>{
     
     res.send({message: 'deletado'})
 }
+
+export const likeNews = async (req,res)=>{
+    try {
+        const id = req.id
+        const userId = req.userId
+      
+        const newsliked = await dados.likeNewsService(id, userId)
+
+        if(!newsliked){
+            await dados.deletelikenewsService(id, userId)
+            return res.send({message: 'like removido'})
+        }
+        
+        return res.send({message: 'ok'})
+
+
+    } catch (err) {
+        return res.status(500).send({message: err.message})
+    }
+}
+
+export const comments = async(req,res)=>{
+    try {
+        const id = req.id
+        const userId = req.userId
+        const {comment} = req.body
+
+        const commenter = await dados.addcommentService(id, userId, comment)
+
+        if(!commenter){
+            return res.status(400).send({message: 'Erro ao comentar'})
+        }       
+
+        return res.send({message: 'sucessefull'})
+    } catch (err) {
+        return res.status(500).send({message: err.message})
+        
+    }
+}
+export const deleteComments = async (req, res) => {
+    try {
+        const { idNews, idComment } = req.params;
+        const userId = req.userId;
+
+        const result = await dados.deleterCommentService(idNews, idComment, userId);
+
+        if (!result) {
+            return res.status(404).send({
+                message: 'Comentário não encontrado ou não tens permissão'
+            });
+        }
+
+        return res.send({
+            message: 'Comentário deletado com sucesso'
+        });
+
+    } catch (err) {
+        return res.status(500).send({ message: err.message });
+    }
+};
