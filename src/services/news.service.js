@@ -1,4 +1,3 @@
-import { create } from '../controllers/news.controller.js'
 import news from '../models/news.model.js'
 
 export const createNews = (body)=>news.create(body)
@@ -12,20 +11,4 @@ export const searchbytitleService = (title)=>news.find({
 
 export const byUserService = (id) =>news.find({user: id}).sort({_id: -1}).populate('user')
 export const updateService= (id,titulo,text,banner)=> news.findOneAndUpdate({_id:id},{titulo,text,banner}, {rawResult:true})
-export const deletePostService = (id)=>news.findOneAndDelete({_id: id})
-export const likeNewsService = (id, userId)=>news.findOneAndUpdate(
-        {
-            _id: id,"likes.userId":{$nin: [userId]}
-        },{
-            $push: {
-                likes:{
-                    userId, 
-                    created: new Date()
-                }
-            }
-        }
-    )
-    
-export const deletelikenewsService  = (id, userId)=>news.findOneAndUpdate(
-        {_id: id},{ $pull: { likes:{userId} } }
-    )   
+export const deletePostService = (id)=>news.findByIdAndDelete(id)

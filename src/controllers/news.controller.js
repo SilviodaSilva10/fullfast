@@ -280,23 +280,3 @@ export const deletePost = async(req,res)=>{
     
     res.send({message: 'deletado'})
 }
-
-export const likeNews = async (req,res)=>{
-    try {
-        const id = req.id
-        const userId = req.userId
-      
-        const newsliked = await dados.likeNewsService(id, userId)
-
-        if(!newsliked){
-            await dados.deletelikenewsService(id, userId)
-            return res.send({message: 'like removido'})
-        }
-        
-        return res.send({message: 'ok'})
-
-
-    } catch (err) {
-        return res.status(500).send({message: err})
-    }
-}
