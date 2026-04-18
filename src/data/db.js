@@ -17,9 +17,9 @@ const connectDBatlas= ()=>{
 
 let connectDB = connectDBatlas
 
-
+/*
 if(!connectDB.errno){
     connectDB = connectDBlocal
 }
-
+*/
 export default connectDB
