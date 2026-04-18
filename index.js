@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 const app = express()
 
@@ -13,6 +14,7 @@ import connectDB from './src/data/db.js'
 connectDB()
 
 app.use(express.json())
+app.use(cors())
 
 app.use('/user', userRote)
 app.use('/auth', loginRote)
