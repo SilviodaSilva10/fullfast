@@ -14,7 +14,11 @@ import connectDB from './src/data/db.js'
 connectDB()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: 'https://fullfast-api.onrender.com', // A URL do seu frontend
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/user', userRote)
 app.use('/auth', loginRote)
