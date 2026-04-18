@@ -18,7 +18,7 @@ import {
 import {validId, validOwner,validEdit,validUser} from '../middlewares/global.middlewares.js'
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-router.post('/',authMiddleware,create)
+router.post('/create',authMiddleware,create)
 router.get('/', findAll)
 router.get('/top', topnews)
 router.get('/search', searchbytitle)

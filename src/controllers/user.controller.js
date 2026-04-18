@@ -1,5 +1,6 @@
 import dados from '../services/user.service.js'
 import bcrypt from 'bcrypt'
+
 const cadastro = async(req,res)=>{
     try{
         const {nome,username,email,password,avatar,background}=req.body
@@ -74,6 +75,7 @@ const deleteUser = async (req,res)=>{
         res.status(500).send({message: err.message})
       }    
 }
+
 
 export  default {
     cadastro, findAll,findUserById, update,deleteUser
