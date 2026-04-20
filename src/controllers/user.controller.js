@@ -5,6 +5,7 @@ const cadastro = async(req,res)=>{
     try{
         const {nome,username,email,password,avatar,background}=req.body
         
+        console.log(nome,username,email,password,avatar,background)
 
         if(!nome || !username || !email || !password || !avatar || !background){
             res.status(400).send({message: "Preencha todos os campos"})
