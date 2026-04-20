@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://fullfast.onrender.com",
+      "url": "https://fullfast-api.onrender.com/",
       "description": "Produção (Render)"
     },
     {

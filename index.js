@@ -1,18 +1,10 @@
 import express from 'express'
-import cors from 'cors'
 import dotenv from 'dotenv'
 
 dotenv.config() // Configurar o dotenv o mais cedo possível
 
 const app = express()
 
-// 1. O CORS deve vir ANTES de qualquer outro middleware ou rota
-app.use(cors({
-  // Adicione a URL do Swagger/Doc se for diferente, ou use '*' para testar
-  origin: ['https://fullfast-api.onrender.com', 'https://fullfast.onrender.com'], 
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 // 2. Middleware para processar JSON
 app.use(express.json())
